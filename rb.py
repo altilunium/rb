@@ -41,7 +41,8 @@ def bongkarTag(tag):
 		#print(type(tag))
 		if(tag.string.strip() != ''):
 			#print(tag.string)
-			listOfstr.append(tag.string)
+
+			listOfstr.append(str(tag.parent.name)+"無"+str(tag.string))
 		else:
 			return
 		 	
@@ -81,13 +82,16 @@ def bongkarTag(tag):
 		#print()
 		None
 
-
-while True:
+GUImode = True
+while GUImode:
 	goOn = True
 	while goOn:
 		try:
 			
 			url = input("URL : ")
+			#url = "https://muhammadcank.wordpress.com/2012/05/26/kromatografi-fingerprint-dan-standardisasi-obat-herbal/"
+			if url == 'q':
+				sys.exit(0)
 
 			if "https://" not in url and "http://" not in url:
 				url = "https://"+str(url)
@@ -118,14 +122,37 @@ while True:
 
 
 	layout = []
-	layout = [[sg.MLine(size=(None,500),font=('Noto',15),key='-ML1-')]]
+	layout = [[sg.MLine(size=(None,500),font=('Noto',13),key='-ML1-')]]
 	window = sg.Window("rb ["+str(sizeof_fmt(len(actualPayload)))+"]",layout,resizable=True).Finalize()
 
 	ultimateString = ""
+
+	pastEM = False
+	isFirst = True
 	for i in listOfstr:
 		#print(i.strip())
 		#disline = []
-		disline = i.strip() +"\n"
+
+		disline = i.strip()
+		if "em無" in disline:
+			disline = disline.replace("em無",'')
+			disline += " "
+			pastEM = True
+		elif pastEM:
+			disline += " "
+			pastEM = False
+			if "p無" in disline:
+				disline = disline.replace("p無",'')	
+
+		elif "p無" in disline:
+			disline = disline.replace("p無",'')
+			disline = "\n\n" + disline
+		elif isFirst:
+			isFirst = False
+		else:
+			disline = "\n\n" + disline
+
+
 		ultimateString += disline
 		#disline.append(sg.Text(i.strip()))
 		#layout.append(disline)
